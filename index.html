@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>【公式】あなたは、どちらを選びますか？</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#0b0b0b;
+      --muted:#6f757b;
+      --radius:12px;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:'Sora','Noto Serif JP',system-ui;
+      background:var(--bg);
+      color:var(--text);
+      text-align:center; /* すべて中央寄せ */
+      line-height:1.7;
+    }
+
+    header{position:relative}
+
+    /* HERO */
+    .hero picture img{
+      width:100%;
+      height:auto;
+      display:block;
+      object-fit:cover;
+    }
+
+    .hero-inner{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:92%;
+      max-width:900px;
+    }
+
+    .title{
+      font-family:'Noto Serif JP','Sora',serif;
+      font-weight:700;
+      font-size:42px;
+      letter-spacing:0.04em;
+      margin:0;
+    }
+
+    .subtitle{
+      margin-top:8px;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    main{
+      max-width:900px;
+      margin:60px auto;
+      padding:0 20px;
+    }
+
+    /* STORY（ブロック表示を廃止） */
+
+    .story h2{
+      font-size:22px;
+      margin-bottom:16px;
+      letter-spacing:0.08em;
+    }
+
+    .story p{
+      max-width:650px;
+      margin:0 auto;
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    .more{
+      margin-top:16px;
+    }
+
+    .more button{
+      background:none;
+      border:1px solid rgba(0,0,0,0.15);
+      padding:8px 14px;
+      border-radius:8px;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    /* 現在遊べる謎解き（ここだけブロック） */
+
+    .puzzles{
+      margin-top:40px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:16px;
+    }
+
+    .puzzle{
+      border:1px solid rgba(0,0,0,0.08);
+      padding:18px;
+      border-radius:var(--radius);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+    }
+
+    .puzzle .name{
+      font-weight:700;
+      font-size:16px;
+    }
+
+    .puzzle a.site{
+      text-decoration:none;
+      border:1px solid rgba(0,0,0,0.2);
+      padding:8px 14px;
+      border-radius:8px;
+      font-weight:700;
+    }
+
+    footer{
+      margin:80px 0 40px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    @media(min-width:980px){
+      .title{font-size:54px}
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header class="hero">
+
+<picture>
+  <source media="(min-width:980px)" srcset="横長.png">
+  <img src="縦長.png" alt="あなたは、どちらを選びますか？">
+</picture>
+
+<div class="hero-inner">
+  <h1 class="title"></h1>
+  <div class="subtitle"></div>
+</div>
+
+</header>
+
+<main>
+
+<section class="story">
+
+<h2>STORY</h2>
+
+<p id="story-text">
+ザ・ブルーホライズン東京…<br>という名の██ホテルの真相を解き明かしたあなた。
+<br>
+その後、警察から事情聴取を受けていたが...
+<br><br>
+「騙されましたね。」
+<span id="dots">…</span>
+
+<span id="more" style="display:none">
+<br><br>やらかした。よく見るとあいつは警察ではなかった。その後、目隠しをされ、睡眠薬を飲まされてしまった。
+<br><br>
+目を開けると、私はある空間に閉じ込められていた。そこには、あの時の偽の警察がいた。<br><br>
+そして、こう言った。<br><br>
+参加者である、あなたの目の前に、██と██があります。
+<br><br>
+参加者のあなたへ、<br>
+██か██を選んでください。<br><br>
+選ばなかった方を████ます。
+<br><br>
+さぁ、<br><br>
+『あなたは、どちらを選びますか？』<br><br>
+</span>
+
+</p>
+
+<div class="more">
+<button id="toggle-more">もっと見る</button>
+</div>
+
+</section>
+
+<section>
+
+<h2 style="margin-top:50px">現在遊べる謎解き</h2>
+
+<div class="puzzles" id="puzzle-list"></div>
+
+</section>
+
+</main>
+
+<footer>
+© <span id="year"></span> RIDDLE STORY
+</footer>
+
+<script>
+
+// 年
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// STORY 展開
+
+const btn=document.getElementById('toggle-more');
+const more=document.getElementById('more');
+const dots=document.getElementById('dots');
+
+btn.addEventListener('click',()=>{
+
+if(more.style.display==='none'){
+more.style.display='inline';
+dots.style.display='none';
+btn.textContent='閉じる';
+}
+else{
+more.style.display='none';
+dots.style.display='inline';
+btn.textContent='もっと見る';
+}
+
+});
+
+
+// 現在遊べる謎解き
+
+const puzzles=[
+
+{
+name:'とあるホテルの秘密',
+site:'https://riddle-nazo-story.github.io/4-start/',
+playable:true
+},
+
+{
+name:'RIDDLE STORY 2',
+site:'https://nazo-shop.booth.pm/items/7303330',
+playable:true
+},
+
+{
+name:'RIDDLE STORY 1',
+site:'https://nazo-shop.booth.pm/items/6993104',
+playable:true
+},
+
+];
+
+const list=document.getElementById('puzzle-list');
+
+puzzles.filter(p=>p.playable).forEach(p=>{
+
+const card=document.createElement('div');
+card.className='puzzle';
+
+card.innerHTML=`
+
+<div class="name">${p.name}</div>
+<a class="site" href="${p.site}" target="_blank">公式サイト</a>
+
+`;
+
+list.appendChild(card);
+
+});
+
+</script>
+
+</body>
+</html>
